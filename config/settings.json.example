@@ -1,5 +1,6 @@
 {
-  "allowed_telegram_users": [123456789],
+  "allowed_discord_users": [123456789012345678],
+  "grocery_channel_id": 123456789012345678,
   "search": {
     "timeout_ms": 15000
   }

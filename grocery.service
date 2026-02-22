@@ -1,5 +1,5 @@
 [Unit]
-Description=Grocery List Telegram Bot
+Description=Grocery List Discord Bot
 After=network.target
 
 [Service]
