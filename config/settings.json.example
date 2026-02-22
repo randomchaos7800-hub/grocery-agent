@@ -1,0 +1,6 @@
+{
+  "allowed_telegram_users": [123456789],
+  "search": {
+    "timeout_ms": 15000
+  }
+}

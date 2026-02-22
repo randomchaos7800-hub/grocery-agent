@@ -1,0 +1,17 @@
+[Unit]
+Description=Grocery List Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=dino
+WorkingDirectory=/home/dino/grocery
+ExecStart=/home/dino/grocery/venv/bin/python /home/dino/grocery/bot.py
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=grocery
+
+[Install]
+WantedBy=multi-user.target
