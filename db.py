@@ -32,6 +32,19 @@ def init_db() -> None:
         """)
         conn.execute("CREATE INDEX IF NOT EXISTS idx_items_checked ON items(checked)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_items_name ON items(name COLLATE NOCASE)")
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS purchase_history (
+                id           INTEGER PRIMARY KEY AUTOINCREMENT,
+                purchased_at TEXT NOT NULL,
+                name         TEXT NOT NULL,
+                quantity     TEXT DEFAULT '1',
+                category     TEXT DEFAULT '',
+                order_total  REAL,
+                source       TEXT DEFAULT 'walmart'
+            )
+        """)
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_ph_name ON purchase_history(name COLLATE NOCASE)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_ph_date ON purchase_history(purchased_at)")
 
 
 def add_item(name: str, quantity: str, added_by: str, category: str = "", notes: str = "") -> int:
@@ -96,3 +109,30 @@ def clear_all() -> int:
     with _connect() as conn:
         cur = conn.execute("DELETE FROM items")
         return cur.rowcount
+
+
+def get_frequent_items(limit: int = 20) -> list[dict]:
+    """Return most frequently purchased items from history, ordered by order count."""
+    with _connect() as conn:
+        rows = conn.execute("""
+            SELECT name, category,
+                   COUNT(*) AS orders,
+                   SUM(CAST(quantity AS REAL)) AS total_qty
+            FROM purchase_history
+            GROUP BY name COLLATE NOCASE
+            ORDER BY orders DESC, total_qty DESC
+            LIMIT ?
+        """, (limit,)).fetchall()
+        return [dict(r) for r in rows]
+
+
+def search_history(query: str) -> list[dict]:
+    """Search purchase history by name (case-insensitive partial match)."""
+    with _connect() as conn:
+        rows = conn.execute("""
+            SELECT purchased_at, name, quantity, category, order_total
+            FROM purchase_history
+            WHERE name LIKE ? COLLATE NOCASE
+            ORDER BY purchased_at DESC
+        """, (f"%{query}%",)).fetchall()
+        return [dict(r) for r in rows]

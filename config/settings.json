@@ -1,0 +1,7 @@
+{
+  "allowed_discord_users": [1474101811768987648],
+  "grocery_channel_id": 1475373122466218035,
+  "search": {
+    "timeout_ms": 15000
+  }
+}

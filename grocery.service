@@ -1,10 +1,10 @@
 [Unit]
 Description=Grocery List Discord Bot
-After=network.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
-User=dino
 WorkingDirectory=/home/dino/grocery
 ExecStart=/home/dino/grocery/venv/bin/python /home/dino/grocery/bot.py
 Restart=on-failure
@@ -14,4 +14,4 @@ StandardError=journal
 SyslogIdentifier=grocery
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target

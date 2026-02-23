@@ -98,10 +98,13 @@ python bot.py
 
 ### systemd (production)
 
+User-level service, no sudo needed:
+
 ```bash
-sudo cp grocery.service /etc/systemd/system/
-sudo systemctl enable grocery
-sudo systemctl start grocery
+cp grocery.service ~/.config/systemd/user/
+systemctl --user daemon-reload
+systemctl --user enable grocery
+systemctl --user start grocery
 ```
 
 ---
